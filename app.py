@@ -1,13 +1,15 @@
+# app.py
 import streamlit as st
 import pandas as pd
-from ai_logic import generate_signals
+import os
 
-st.set_page_config(page_title="TradeSense AI", layout="centered")
-st.title("📈 TradeSense - AI Signal Dashboard")
+st.title("📈 TradeSense - Nifty Data Viewer")
 
-try:
-    df = pd.read_csv("data/latest_data.csv")
-    result = generate_signals(df)
-    st.dataframe(result)
-except Exception as e:
-    st.error(f"Error loading data: {e}")
+file_path = "data/latest_data.csv"
+
+if os.path.exists(file_path):
+    df = pd.read_csv(file_path)
+    st.success("✅ Live data loaded.")
+    st.dataframe(df)
+else:
+    st.warning("⚠️ Data not found. Please wait for auto-update or run the action manually.")
