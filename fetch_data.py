@@ -1,18 +1,18 @@
+# fetch_data.py
+import yfinance as yf
 import pandas as pd
-import requests
+from datetime import datetime
 import os
 
-# Dummy NSE data simulation (replace with real API if needed)
-def fetch_data():
-    data = {
-        "symbol": ["RELIANCE", "TCS", "INFY"],
-        "price": [2800, 3700, 1450],
-        "volume": [100000, 80000, 120000]
-    }
-    df = pd.DataFrame(data)
+def fetch_nifty_data():
+    ticker = "^NSEI"
+    df = yf.download(ticker, period="5d", interval="1d")
+    df.reset_index(inplace=True)
+
+    # Save to data folder
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/latest_data.csv", index=False)
-    print("Data fetched and saved.")
+    print("Data saved successfully.")
 
 if __name__ == "__main__":
-    fetch_data()
+    fetch_nifty_data()
