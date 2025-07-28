@@ -1,5 +1,3 @@
-pandas
 streamlit
-requests
-scikit-learn
-joblib
+pandas
+yfinance
