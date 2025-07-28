@@ -1,12 +1,13 @@
-name: Fetch Live Data Daily
+# .github/workflows/fetch_data.yml
+name: Daily Data Fetch
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Every day at 2 AM UTC
-  workflow_dispatch:     # Manual trigger
+    - cron: "0 3 * * *"  # Runs every day at 8:30 AM IST (3:00 UTC)
+  workflow_dispatch:     # Optional: allows manual run
 
 jobs:
-  fetch_data:
+  fetch-and-commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -15,12 +16,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.10
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install yfinance pandas
 
-      - name: Run data fetch script
+      - name: Run data fetcher
+        run: python fetch_data.py
+
+      - name: Commit & push updated data
         run: |
-          python fetch_data.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/latest_data.csv
+          git commit -m "Daily data update" || echo "No changes to commit"
+          git push
+
